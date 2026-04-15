@@ -1,79 +1,76 @@
 # Test Automation Notes
 
-## Scope
-Tài liệu này tổng hợp quy trình viết và chạy test cho 4 nhóm:
-- ClassCreateView (UT_CL_01..UT_CL_06)
-- ClassSession.save (UT_CS_01..UT_CS_07)
-- EnrollStudentView / Enrollment create (UT_ENR_01..UT_ENR_06)
-- State Transition class status (UT_ST_01..UT_ST_12)
+## Scope (4 file da sua)
+Tai lieu nay tong hop theo 4 file test trong thu muc scripts:
+- test_classcreateview_unit.py (UT_CL_01..UT_CL_06 + add_sec1)
+- test_classsession_unit.py (UT_CS_01..UT_CS_07 + add_sec2)
+- test_enrollstudentview_unit.py (UT_ENR_01..UT_ENR_06 + add_sec3)
+- test_classstatetransition_unit.py (UT_ST_01..UT_ST_12 + add_sec4)
 
-## Công cụ đã dùng
-- Python virtual environment: .venv
-- Pytest + pytest-django
-- Django test client (fixture auth_client)
-- VS Code + GitHub Copilot chat workflow
-- PowerShell terminal để chạy lệnh
+## Muc tieu tung nhom test
+1. ClassCreateView
+- Kiem tra EP/BVA cho create class: bien ngay bat dau-ket thuc, thieu field bat buoc, duplicate code, invalid status.
+- Xac nhan status code 204/422 va DB khong tao ban ghi sai.
 
-## Lệnh đã dùng để chạy test
-### Chạy toàn bộ Class tests
-```powershell
-.\.venv\Scripts\python.exe -m pytest apps/classes/tests/test_classes_unit.py -v --tb=short
-```
+2. ClassSession.save
+- Kiem tra session date hop le, date o bien start/end, duplicate index, class khong co date.
+- Co case mong doi ValidationError cho date ngoai khoang lop (de bat gap validation neu chua implement).
 
-### Chạy toàn bộ EnrollStudentView tests
-```powershell
-.\.venv\Scripts\python.exe -m pytest apps/classes/tests/test_enrollstudentview_unit.py -v --tb=short
-```
+3. EnrollStudentView.post
+- Decision table theo trang thai lop: PLANNED/ONGOING cho phep, CANCELLED/COMPLETED tu choi.
+- Kiem tra duplicate enrollment va invalid student id.
 
-### Chạy theo nhóm (ví dụ State Transition)
-```powershell
-.\.venv\Scripts\python.exe -m pytest apps/classes/tests/test_classes_unit.py -k "ut_st" -v --tb=short
-```
+4. State transition class status
+- Phu ma tran chuyen trang thai giua PLANNED, ONGOING, COMPLETED, CANCELLED.
+- Tach ro case valid va invalid transition qua endpoint class_edit.
 
-### Chạy test đơn lẻ (ví dụ)
-```powershell
-.\.venv\Scripts\python.exe -m pytest apps/classes/tests/test_classes_unit.py::test_ut_st_01_planned_to_ongoing -v --tb=short
-```
-
-### Kiểm tra collect test
-```powershell
-.\.venv\Scripts\python.exe -m pytest apps/classes/tests/test_classes_unit.py apps/classes/tests/test_enrollstudentview_unit.py --collect-only -q
-```
-
-## Prompt patterns đã sử dụng
-Dưới đây là các mẫu prompt đã dùng để tạo và mở rộng test:
-
-1) Prompt tạo test EP/BVA cho create class
-- "Thêm vào test_classes_unit.py các case UT_CL_xx cho end_date boundary, required fields, duplicate code..."
-
-2) Prompt tạo test ClassSession.save
-- "Viết UT_CS_xx cho valid date, boundary start/end, duplicate index, null date handling..."
-
-3) Prompt tạo test EnrollStudentView theo decision table
-- "Viết UT_ENR_xx cho class status Ongoing/Planned/Cancelled/Completed và duplicate enrollment..."
-
-4) Prompt tạo test State Transition full matrix
-- "Phủ kín UT_ST_01..UT_ST_12 cho 12 chuyển đổi chéo giữa PLANNED/ONGOING/COMPLETED/CANCELLED..."
-
-5) Prompt vận hành
-- "Chạy riêng từng test cho tôi"
-- "Chạy lại nhóm ut_st"
-- "Tổng hợp lại script test"
-
-## Convention đặt tên test
-- UT_CL_xx: Class create form/view
-- UT_CS_xx: ClassSession save/model behavior
+## Convention dat ten
+- UT_CL_xx: Class create view/form
+- UT_CS_xx: Class session model behavior
 - UT_ENR_xx: Enrollment create flow
-- UT_ST_xx: Class status transition matrix
+- UT_ST_xx: Class status transition
+- test_add_secX_*: case bo sung de tang do phu va phuc vu bao cao
 
-## File map
-- apps/classes/tests/test_classes_unit.py
-- apps/classes/tests/test_enrollstudentview_unit.py
-- apps/classes/tests/conftest.py
-- pytest.ini
-- steam_center/settings_test.py
+## Lenh chay test (PowerShell)
+### Chay tung file
+```powershell
+.\.venv\Scripts\python.exe -m pytest scripts\test_classcreateview_unit.py -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_classsession_unit.py -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_enrollstudentview_unit.py -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_classstatetransition_unit.py -v --tb=short
+```
 
-## Ghi chú kết quả quan trọng
-- Nhiều case invalid transition (UT_ST) đang fail, chỉ ra gap validation trong luồng class_edit.
-- Các case deny enrollment cho class CANCELLED/COMPLETED cũng phát hiện gap nghiệp vụ (hệ thống vẫn redirect thành công).
-- Các note/section header đã được thêm vào file test để dễ bảo trì và báo cáo.
+### Chay ca 4 file
+```powershell
+.\.venv\Scripts\python.exe -m pytest scripts\test_classcreateview_unit.py scripts\test_classsession_unit.py scripts\test_enrollstudentview_unit.py scripts\test_classstatetransition_unit.py -v --tb=short
+```
+
+### Chay theo nhom UT
+```powershell
+.\.venv\Scripts\python.exe -m pytest scripts\test_classcreateview_unit.py -k "ut_cl" -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_classsession_unit.py -k "ut_cs" -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_enrollstudentview_unit.py -k "ut_enr" -v --tb=short
+.\.venv\Scripts\python.exe -m pytest scripts\test_classstatetransition_unit.py -k "ut_st" -v --tb=short
+```
+
+### Chay 1 test cu the (vi du)
+```powershell
+.\.venv\Scripts\python.exe -m pytest scripts\test_classstatetransition_unit.py::test_ut_st_01_planned_to_ongoing -v --tb=short
+```
+
+### Kiem tra collect
+```powershell
+.\.venv\Scripts\python.exe -m pytest scripts\test_classcreateview_unit.py scripts\test_classsession_unit.py scripts\test_enrollstudentview_unit.py scripts\test_classstatetransition_unit.py --collect-only -q
+```
+
+## Ghi chu ket qua mong doi
+- Cac case invalid transition trong nhom UT_ST duoc thiet ke de phat hien lo hong validate state machine.
+- Cac case deny enrollment voi class CANCELLED/COMPLETED duoc thiet ke de phat hien sai lech rule nghiep vu neu he thong van tao ghi danh.
+- Cac case add_sec1..add_sec4 la bo sung regression/smoke nhe de bao dam endpoint hoat dong on dinh.
+
+## File map hien tai
+- scripts/test_classcreateview_unit.py
+- scripts/test_classsession_unit.py
+- scripts/test_enrollstudentview_unit.py
+- scripts/test_classstatetransition_unit.py
+- scripts/test_note.md
