@@ -70,3 +70,50 @@ run_tests.bat
 - File `pytest.ini` chứa cấu hình Django settings và options
 - Sử dụng `@pytest.mark.django_db` cho database tests
 - Tích hợp với Django test client và fixtures
+
+
+
+Các Method/Function Được Test:
+
+1. Login Authentication:
+- login_view (function) - Xử lý POST/GET login.
+- LoginForm.clean (method) - Validation tổng thể form login.
+- LoginForm.validate_phone (method) - Validation riêng phone number.
+
+2. Logout Authentication:
+- logout_view (function) - Đăng xuất user.
+3. Password Reset Flow:
+- password_reset_request_view (function) - Gửi yêu cầu reset.
+- password_reset_done_view (function) - Hiển thị sau gửi yêu cầu.
+- password_reset_confirm_view (function) - Xác nhận reset từ link.
+- password_reset_complete_view (function) - Hoàn thành reset.
+- ForgotPasswordForm (class) - Form quên password.
+- build_password_reset_link (function) - Tạo link reset.
+- send_password_reset_email (function) - Gửi email reset.
+4. Change Password:
+- change_password_view (function) - Thay đổi password khi login.
+- UserPasswordChangeForm (class) - Form đổi password.
+- UserSetPasswordForm (class) - Form đặt password mới.
+Tổng cộng: 38 test cases cho 13 method/function chính liên quan đến authentication.
+
+Các Method/Function Không Được Test (và Tại Sao):
+1. User Management (Không liên quan trực tiếp đến authentication):
+- AdminUserCreateForm.save - Tạo user mới (không phải login/logout).
+- AdminUserUpdateForm.save - Cập nhật user (không phải auth).
+- UserProfileUpdateForm - Cập nhật profile (không phải auth).
+- detect_prefix_from_groups - Helper cho user code (không phải auth).
+- UserCodeCounter.next_code - Sinh user code (không phải auth).
+2. Admin/Staff Functions:
+- SimpleGroupForm - Quản lý groups (không phải user auth).
+- ImportUserForm - Import users (không phải login flow).
+3. Utility/Helper Functions:
+- _password_reset_rate_key - Rate limiting key (đã test gián tiếp qua views).
+- _is_password_reset_rate_limited - Kiểm tra rate limit (đã test gián tiếp).
+- _increment_password_reset_rate - Tăng counter (đã test gián tiếp).
+- _password_reset_success_response - Response helper (đã test qua views).
+4. Model Methods:
+- User.set_password - Đã test gián tiếp qua forms/views.
+- User.check_password - Đã test gián tiếp qua login.
+- User.preferred_email - Đã test gián tiếp qua email sending.
+5. Other Views:
+- Các view admin, reports, etc. - Không liên quan đến user authentication.
