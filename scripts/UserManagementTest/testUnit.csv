@@ -1,0 +1,12 @@
+File Name,Class Name / Method,TC ID,Test Objective,Input Data,Expected Output,Notes / Defect Ref,CheckDB,Rollback,Status
+apps/accounts/forms.py,AdminUserCreateForm.save(),UT_UM_01,Tạo người dùng - hợp lệ,"Name='An', Phone='0912345678', Role='Teacher'",HTTP 200. User record in accounts_user table.,UserCode prefix='EDS',SELECT COUNT(*) FROM accounts_user WHERE username='nguyen-an' -> 1,True,Pass
+apps/accounts/forms.py,AdminUserCreateForm.clean(),UT_UM_02,Kiểm tra trùng SĐT,Phone='0901234567' (already exists),Error: 'Phone number already exists'.,**Bug: System currently accepts duplicate**,SELECT COUNT(*) FROM accounts_user WHERE phone='0901234567' -> 1,True,Fail
+apps/accounts/forms.py,AdminUserCreateForm.clean(),UT_UM_03,Thiếu SĐT cho Teacher,Phone='' (empty),Error: 'Số điện thoại là bắt buộc cho vai trò này'.,Teacher role must have phone,No record in DB,True,Pass
+apps/accounts/forms.py,clean_national_id(),UT_UM_09,Độ dài CCCD sai,national_id='12345' (too short),Error: 'CCCD phải gồm đúng 12 chữ số'.,BVA - invalid,No record in DB,True,Pass
+apps/accounts/forms.py,clean_national_id(),UT_UM_10,Trùng CCCD,national_id='001200300400' (exists),Error: 'CCCD đã tồn tại trong hệ thống'.,EP - invalid,No record in DB,True,Pass
+apps/accounts/forms.py,clean(),UT_UM_11,Mật khẩu không khớp,password1 != password2,Error: 'Mật khẩu và xác nhận mật khẩu không trùng'.,Negative Testing,No record in DB,True,Pass
+apps/accounts/views.py,user_delete_view(),UT_UM_05,Vô hiệu hóa user,user_id=<active_user>,is_active=False in DB.,State Transition: Active -> Inactive,SELECT is_active FROM accounts_user WHERE id=<id> -> False,True,Pass
+apps/accounts/views.py,user_delete_view(),UT_UM_07,Xóa user (Vật lý),user_id=<target>,Row no longer in accounts_user.,**Bug: Only deactivates (is_active=False)**,SELECT COUNT(*) FROM accounts_user WHERE id=<id> -> 0,True,Fail
+apps/accounts/views.py,user_edit_view(),UT_UM_08,Thay đổi vai trò,"groups=[Teacher Group], user_id=<student>",user.role = 'Teacher' in DB.,EP - valid role assignment,SELECT role FROM accounts_user WHERE id=<id> -> 'Teacher',True,Pass
+apps/accounts/views.py,manage_accounts(),UT_UM_14,Bảo mật: Truy cập trái phép,Regular student session,HTTP 403 Forbidden.,Security Policy: Student cannot access Admin area,No DB change,True,Pass
+apps/accounts/models.py,UserCodeCounter.next_code(),UT_UM_13,Kiểm tra Prefix sau khi đổi Role,Role change Teacher -> Student,user_code remains 'EDS0001' (if applicable),Behavior: user_code is generated only once.,SELECT user_code FROM accounts_user WHERE id=<id> -> 'EDS0001',True,Pass
