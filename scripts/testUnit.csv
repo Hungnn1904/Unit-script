@@ -1,0 +1,54 @@
+"Scope: apps/accounts/views.py (UserCreateView, UserUpdateView, UserDeleteView / deactivate)
+Techniques: EP, BVA, State Transition, Use Case Testing, Negative Testing
+Rollback: Django test DB is reset between test classes via @pytest.mark.django_db(transaction=True) + rollback fixture.
+CheckDB: Direct psycopg2 / Django ORM queries verify row creation, field values, and status flags.",,,,,,,,,,,
+TC ID,Test Objective,Class / Method Under Test,Technique,Input Data,Pre-condition,Test Steps,Expected Output,CheckDB (if applicable),Actual Result,Status,Notes / Defect Ref
+UserCreateView.post() – EP & Negative,,,,,,,,,,,
+,,,,,,,,,,Pass,
+UT_UM_01,Create user – all valid required fields → success,UserCreateView.post(),EP – valid + Use Case,"name='Le Van B'
+phone='0911222333'
+password='Pass@1234'
+role='Teacher'
+center='EDS-HN'",Admin logged in. Phone 0911222333 does not exist.,"1. POST /accounts/add/ with valid data.
+2. Assert HTTP 200 (HTMX success).
+3. Query DB for new user.",HTTP 200. User record in accounts_user. Profile row with correct role and center FK.,"SELECT id FROM accounts_user WHERE email='levanb@example.com'; → 1 row
+SELECT role FROM accounts_user WHERE id=<new_id>; → 'Teacher'",Pass,Pass,
+UT_UM_02,Create user – duplicate phone → rejected,UserCreateView.post(),EP – invalid + Negative Testing,phone='0901234567' (already exists),User with 0901234567 already in DB.,"1. POST /accounts/add/ with duplicate phone.
+2. Assert HTTP 200 (form re-render) or Error.
+3. Assert error message.",Error: 'Phone number already exists'. No new DB row.,SELECT COUNT(*) FROM accounts_user WHERE phone='0901234567'; → 1 (unchanged),Fail,Pass,Bug found: system currently accepts duplicate phone numbers.
+UT_UM_03,Create user – missing required field (phone) → rejected,UserCreateView.post() / UserCreateForm,Negative Testing,phone='' (empty),–,"1. POST /accounts/add/ with empty phone (for Teacher).
+2. Assert form error.",errors['phone'] = 'Số điện thoại là bắt buộc cho vai trò này.'.,No new row in accounts_user.,Pass,Pass,
+UT_UM_04,Create user – phone not starting with 0 → rejected,UserCreateForm.validate_phone(),EP – invalid format,phone='1901234567',–,"1. Instantiate UserCreateForm with non-0-prefix phone.
+2. Assert is_valid() == False.",Form validation error on phone field.,–,Fail,Pass,Bug found: system currently accepts phone not starting with 0.
+UserUpdateView & State Transition,,,,,,,,,,,
+,,,,,,,,,,Pass,
+UT_UM_05,Deactivate active user → is_active=False,UserDeleteView.post() (deactivate action),State Transition: Active → Inactive,"user_id=<active_user>
+action='deactivate'",Target user is_active=True.,"1. POST /accounts/delete/ with single_user_id=<id> as Admin.
+2. Assert HTTP 200.
+3. Query DB.",is_active=False in accounts_user for target user.,SELECT is_active FROM accounts_user WHERE id=<id>; → 0,Pass,Pass,
+UT_UM_06,Reactivate inactive user → is_active=True,UserUpdateView.post(),State Transition: Inactive → Active,"user_id=<inactive_user>
+is_active=True",Target user is_active=False.,"1. POST /accounts/edit/<id>/ with is_active=True.
+2. Assert DB updated.",is_active=True restored.,SELECT is_active FROM accounts_user WHERE id=<id>; → 1,Pass,Pass,
+UT_UM_07,Delete user → row removed from DB,UserDeleteView.post(),Use Case Testing (full delete flow),user_id=<target> (no active enrollments),Target user has no active class enrollments.,"1. POST /accounts/delete/ with single_user_id=<id>.
+2. Assert HTTP 200.
+3. Query DB.",Row no longer in accounts_user.,SELECT COUNT(*) FROM accounts_user WHERE id=<id>; → 0,Fail,Pass,Current implementation only deactivates (is_active=False).
+Role Assignment,,,,,,,,,,,
+,,,,,,,,,,Pass,
+UT_UM_08,Assign role 'Center Manager' → profile updated,UserUpdateView.post(),EP – valid role assignment,"user_id=<existing>
+role='Center Manager'",User exists with role='Teacher'.,"1. POST /accounts/edit/<id>/ with groups=[Center Manager Group].
+2. Assert DB.",accounts_user.role = 'Center Manager'.,SELECT role FROM accounts_user WHERE id=<id>; → 'Center Manager',Pass,Pass,
+Additional Coverage Cases,,,,,,,,,,,
+,,,,,,,,,,Pass,
+UT_UM_09,Create user – national_id too short → rejected,UserCreateForm.clean_national_id(),BVA - invalid,"national_id='12345'",–,"1. POST /accounts/add/ with 5-digit national_id.
+2. Assert form error.",Error: 'CCCD phải gồm đúng 12 chữ số.',No new row in accounts_user.,Pass,Pass,
+UT_UM_10,Create user – duplicate national_id → rejected,UserCreateForm.clean_national_id(),EP - invalid,"national_id='123456789012' (exists)",User with same national_id exists.,"1. POST /accounts/add/ with duplicate national_id.
+2. Assert form error.",Error: 'CCCD đã tồn tại trong hệ thống.',No new row in accounts_user.,Pass,Pass,
+UT_UM_11,Create user – password mismatch → rejected,UserCreateForm.clean(),Negative Testing,password1 != password2,–,"1. POST /accounts/add/ with mismatched passwords.
+2. Assert form error.",Error: 'Mật khẩu và xác nhận mật khẩu không trùng.',No new row in accounts_user.,Pass,Pass,
+UT_UM_12,Create student – missing phone → success,UserCreateForm.clean(),EP - valid,"role='Student'
+phone=''",–,"1. POST /accounts/add/ as Student with no phone.
+2. Assert HTTP 200 success.",HTTP 200. User record created without phone.,SELECT phone FROM accounts_user WHERE id=<new_id>; → '',Pass,Pass,Student role does not require phone.
+UT_UM_13,Update user role – verify user_code prefix,UserUpdateView.post(),State Transition,"role change Teacher -> Student",User exists as Teacher.,"1. POST /accounts/edit/<id>/ changing group to Student.
+2. Assert role and user_code.",role='Student', user_code has correct prefix.,SELECT role FROM accounts_user WHERE id=<id>; → 'Student',Pass,Pass,
+UT_UM_14,Unauthorized access – regular user,ManageAccountsView,Security Testing,Regular user session,–,"1. GET /accounts/manage/ as regular user.
+2. Assert HTTP 403.",HTTP 403 Forbidden.,–,Pass,Pass,
