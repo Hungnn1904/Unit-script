@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_07
+# Mục đích: Kiểm tra giáo viên truy cập chi tiết buổi học của lớp mình phụ trách.
+# Logic: Đăng nhập bằng teacher, truy cập /sessions/{session.id}/detail/.
+# Kết quả mong muốn: API trả về 200.
 from django.test import TestCase, Client
 
 class TestUT_RBAC_07(TestCase):

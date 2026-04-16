@@ -1,10 +1,14 @@
 
+ 
+# Test case: UT_RBAC_13
+# Mục đích: Kiểm tra phụ huynh không được phép cập nhật điểm danh cho con mình.
+# Logic: Đăng nhập bằng parent, gửi request điểm danh cho student là con của parent.
+# Kết quả mong muốn: API trả về 403.
 from django.test import TestCase, Client
 from apps.accounts.models import User
 
 class TestUT_RBAC_13(TestCase):
     def test_UT_RBAC_13(self):
-        # Parent POST attendance for child → HTTP 403
         from apps.attendance.models import Attendance
         from apps.class_sessions.models import ClassSession
         from apps.classes.models import Class

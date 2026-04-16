@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_06
+# Mục đích: Kiểm tra cập nhật điểm danh với session_id không tồn tại.
+# Logic: Gửi request với session_id = 9999 (không tồn tại).
+# Kết quả mong muốn: API trả về 404.
 from django.test import TestCase, Client
 
 class TestUT_ATT_06(TestCase):

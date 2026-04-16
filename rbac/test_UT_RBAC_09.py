@@ -1,3 +1,8 @@
+ 
+# Test case: UT_RBAC_09
+# Mục đích: Kiểm tra giáo viên thuộc lớp có quyền cập nhật điểm danh cho học sinh trong lớp.
+# Logic: Đăng nhập bằng teacher thuộc lớp, gửi request điểm danh.
+# Kết quả mong muốn: API trả về 200.
 from django.test import TestCase, Client
 from apps.accounts.models import User
 class TestUT_RBAC_09(TestCase):

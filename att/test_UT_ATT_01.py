@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_01
+# Mục đích: Kiểm tra giáo viên có quyền cập nhật điểm danh cho học sinh với trạng thái hợp lệ ('P').
+# Logic: Tạo dữ liệu lớp, session, giáo viên, học sinh, gán quyền cho giáo viên, gửi request cập nhật điểm danh.
+# Kết quả mong muốn: API trả về 200, bản ghi Attendance được tạo với status='P'.
 from django.test import TestCase, Client
 
 class TestUT_ATT_01(TestCase):

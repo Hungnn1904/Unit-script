@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_14
+# Mục đích: Kiểm tra học sinh tự cập nhật điểm đánh giá cho mình.
+# Logic: Đăng nhập bằng student, gửi request đánh giá.
+# Kết quả mong muốn: API trả về 302 hoặc 403.
 from django.test import TestCase, Client
 
 class TestUT_ATT_14(TestCase):

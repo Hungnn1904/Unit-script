@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_09
+# Mục đích: Kiểm tra giáo viên cập nhật điểm đánh giá với score = 0 (hợp lệ).
+# Logic: Gửi score = 0, kiểm tra lưu đúng.
+# Kết quả mong muốn: API trả về 200, lưu score = 0.
 from django.test import TestCase, Client
 
 class TestUT_ATT_09(TestCase):

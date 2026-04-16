@@ -1,3 +1,8 @@
+ 
+# Test case: UT_RBAC_10
+# Mục đích: Kiểm tra giáo viên không thuộc lớp không được cập nhật điểm danh cho học sinh lớp đó.
+# Logic: Đăng nhập bằng teacher không thuộc lớp, gửi request điểm danh.
+# Kết quả mong muốn: API trả về 403.
 from django.test import TestCase, Client
 from apps.accounts.models import User
 class TestUT_RBAC_10(TestCase):

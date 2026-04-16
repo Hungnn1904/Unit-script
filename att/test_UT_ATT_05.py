@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_05
+# Mục đích: Kiểm tra cập nhật điểm danh với note (ghi chú) hợp lệ.
+# Logic: Tạo dữ liệu, gán quyền, gửi request với status='L' và note.
+# Kết quả mong muốn: Attendance lưu đúng status và note.
 from django.test import TestCase, Client
 
 class TestUT_ATT_05(TestCase):

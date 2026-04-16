@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_18
+# Mục đích: Kiểm tra giáo viên cập nhật remark mà không có score.
+# Logic: Gửi remark, không gửi score, kiểm tra lưu assessment với score=None.
+# Kết quả mong muốn: Assessment được tạo, score=None.
 from django.test import TestCase, Client
 
 class TestUT_ATT_18(TestCase):

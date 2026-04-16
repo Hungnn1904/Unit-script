@@ -1,4 +1,9 @@
 
+ 
+# Test case: UT_RBAC_15
+# Mục đích: Kiểm tra học sinh không được phép cập nhật điểm danh.
+# Logic: Đăng nhập bằng student, gửi request điểm danh.
+# Kết quả mong muốn: API trả về 403.
 from django.test import TestCase, Client
 from apps.accounts.models import User
 

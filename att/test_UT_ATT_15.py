@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_15
+# Mục đích: Kiểm tra học sinh này cố cập nhật điểm cho học sinh khác.
+# Logic: Đăng nhập bằng student1, gửi request đánh giá cho student2.
+# Kết quả mong muốn: API trả về 302 hoặc 403.
 from django.test import TestCase, Client
 
 class TestUT_ATT_15(TestCase):

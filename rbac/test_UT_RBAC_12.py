@@ -1,10 +1,13 @@
 
+ 
+# Test case: UT_RBAC_12
+# Mục đích: Kiểm tra phụ huynh không được truy cập lịch sử điểm danh của học sinh không phải con mình.
+# Logic: Đăng nhập bằng parent, truy cập /attendance/child_history/{student.id}/ với student không phải con của parent.
+# Kết quả mong muốn: API trả về 403.
 from django.test import TestCase, Client
 from apps.accounts.models import User
-
 class TestUT_RBAC_12(TestCase):
     def test_UT_RBAC_12(self):
-        # Parent GET another child's attendance → HTTP 403
         from apps.attendance.models import Attendance
         from apps.class_sessions.models import ClassSession
         from apps.classes.models import Class
@@ -40,7 +43,6 @@ class TestUT_RBAC_12(TestCase):
         parent = User.objects.create_user(username='parent12', password='pass', role='Parent')
         student1 = User.objects.create_user(username='student12a', password='pass', role='Student')
         student2 = User.objects.create_user(username='student12b', password='pass', role='Student')
-        # TODO: parent chỉ được xem student1, không được xem student2 nếu hệ thống hỗ trợ
         client.force_login(parent)
         url = f'/attendance/history/{student2.id}/'
         response = client.get(url)

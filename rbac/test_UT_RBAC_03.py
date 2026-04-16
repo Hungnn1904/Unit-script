@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_03
+# Mục đích: Kiểm tra quyền admin tạo mới tài khoản giáo viên qua API.
+# Logic: Tạo user admin, đăng nhập, gửi POST tạo user mới.
+# Kết quả mong muốn: Trả về HTTP 200 hoặc 201 (tạo thành công).
 from django.test import TestCase, Client
 
 class TestUT_RBAC_03(TestCase):

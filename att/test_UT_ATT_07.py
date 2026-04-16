@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_07
+# Mục đích: Kiểm tra update hợp lệ lần 1, lần 2 gửi status không hợp lệ.
+# Logic: Lần 1 gửi status='P' (hợp lệ), lần 2 gửi status='Sick' (không hợp lệ).
+# Kết quả mong muốn: Lần 2 không update, dữ liệu giữ nguyên.
 from django.test import TestCase, Client
 
 class TestUT_ATT_07(TestCase):

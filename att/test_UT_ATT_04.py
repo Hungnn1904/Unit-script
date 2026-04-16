@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_04
+# Mục đích: Kiểm tra update điểm danh 2 lần liên tiếp với các trạng thái khác nhau.
+# Logic: Tạo dữ liệu, gán quyền, update lần 1 (status='P'), update lần 2 (status='A').
+# Kết quả mong muốn: Bản ghi Attendance được update, không tạo mới, id không đổi.
 from django.test import TestCase, Client
 
 class TestUT_ATT_04(TestCase):

@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_08
+# Mục đích: Kiểm tra giáo viên truy cập chi tiết buổi học của lớp không phải mình phụ trách.
+# Logic: Đăng nhập bằng teacher khác, truy cập /sessions/{session.id}/detail/.
+# Kết quả mong muốn: API trả về 403 hoặc 404.
 from django.test import TestCase, Client
 
 class TestUT_RBAC_08(TestCase):

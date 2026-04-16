@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_02
+# Mục đích: Kiểm tra giáo viên cập nhật điểm danh với trạng thái không hợp lệ ('Sick').
+# Logic: Tạo dữ liệu, gán quyền, gửi request với status không hợp lệ.
+# Kết quả mong muốn: API trả về 400, không lưu dữ liệu.
 from django.test import TestCase, Client
 
 class TestUT_ATT_02(TestCase):

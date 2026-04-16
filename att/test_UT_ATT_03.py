@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_03
+# Mục đích: Kiểm tra gửi request thiếu trường 'status' khi điểm danh.
+# Logic: Tạo dữ liệu, gán quyền, gửi request không có status.
+# Kết quả mong muốn: API trả về 400, không lưu dữ liệu.
 from django.test import TestCase, Client
 
 class TestUT_ATT_03(TestCase):

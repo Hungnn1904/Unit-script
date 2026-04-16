@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_04
+# Mục đích: Kiểm tra quyền truy cập của CenterManager vào trang quản lý tài khoản.
+# Logic: Tạo user CenterManager, đăng nhập, truy cập /accounts/manage/.
+# Kết quả mong muốn: Trả về HTTP 200 (có quyền) hoặc 403 (không có quyền).
 from django.test import TestCase, Client
 
 class TestUT_RBAC_04(TestCase):

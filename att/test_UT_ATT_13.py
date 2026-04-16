@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_13
+# Mục đích: Kiểm tra phụ huynh cố gắng cập nhật điểm danh cho học sinh.
+# Logic: Đăng nhập bằng parent, gửi request điểm danh.
+# Kết quả mong muốn: API trả về 302 (redirect login) hoặc 403 (forbidden).
 from django.test import TestCase, Client
 
 class TestUT_ATT_13(TestCase):

@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_19
+# Mục đích: Kiểm tra phụ huynh cố cập nhật điểm đánh giá cho học sinh.
+# Logic: Đăng nhập bằng parent, gửi request đánh giá.
+# Kết quả mong muốn: API trả về 302 hoặc 403.
 from django.test import TestCase, Client
 
 class TestUT_ATT_19(TestCase):

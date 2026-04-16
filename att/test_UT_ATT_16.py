@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_16
+# Mục đích: Kiểm tra giáo viên cập nhật điểm đánh giá với score là số thực và remark.
+# Logic: Gửi score = 9.5, remark = 'Good', kiểm tra lưu đúng.
+# Kết quả mong muốn: Lưu đúng score và remark.
 from django.test import TestCase, Client
 
 class TestUT_ATT_16(TestCase):

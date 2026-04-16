@@ -1,10 +1,14 @@
 
+ 
+# Test case: UT_RBAC_11
+# Mục đích: Kiểm tra phụ huynh truy cập lịch sử điểm danh của con mình.
+# Logic: Đăng nhập bằng parent, truy cập /attendance/child_history/{student.id}/ với student là con của parent.
+# Kết quả mong muốn: API trả về 200.
 from django.test import TestCase, Client
 from apps.accounts.models import User
 
 class TestUT_RBAC_11(TestCase):
     def test_UT_RBAC_11(self):
-        # Parent GET child's attendance page → HTTP 200
         from apps.attendance.models import Attendance
         from apps.class_sessions.models import ClassSession
         from apps.classes.models import Class
@@ -18,7 +22,6 @@ class TestUT_RBAC_11(TestCase):
         session = ClassSession.objects.create(klass=klass, index=1)
         parent = User.objects.create_user(username='parent11a', password='pass', role='Parent')
         student = User.objects.create_user(username='student11a', password='pass', role='Student')
-        # Simulate parent-child relationship
         from apps.accounts.models import ParentStudentRelation
         ParentStudentRelation.objects.create(parent=parent, student=student)
         client.force_login(parent)
@@ -38,9 +41,7 @@ class TestUT_RBAC_11(TestCase):
         session = ClassSession.objects.create(klass=klass, index=1)
         parent = User.objects.create_user(username='parent11b', password='pass', role='Parent')
         student = User.objects.create_user(username='student11b', password='pass', role='Student')
-        # TODO: Giả lập quan hệ parent-child nếu hệ thống hỗ trợ
         client.force_login(parent)
         url = f'/attendance/history/{student.id}/'
         response = client.get(url)
-        # Có thể là 200 hoặc 403 tuỳ hệ thống
         self.assertIn(response.status_code, [200, 403])

@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_08
+# Mục đích: Kiểm tra giáo viên cập nhật điểm đánh giá với score không hợp lệ (âm).
+# Logic: Gửi score = -1, kiểm tra không lưu assessment.
+# Kết quả mong muốn: API trả về 400, không lưu assessment.
 from django.test import TestCase, Client
 
 class TestUT_ATT_08(TestCase):

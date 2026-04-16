@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_01
+# Mục đích: Kiểm tra quyền truy cập của admin vào trang quản lý tài khoản.
+# Logic: Tạo user admin, đăng nhập, truy cập /accounts/manage/.
+# Kết quả mong muốn: Trả về HTTP 200 (PASS).
 from django.test import TestCase, Client
 
 class TestUT_RBAC_01(TestCase):

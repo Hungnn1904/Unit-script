@@ -1,4 +1,8 @@
 
+# Test case: UT_RBAC_06
+# Mục đích: Kiểm tra CenterManager truy cập danh sách lớp của center khác.
+# Logic: Đăng nhập bằng CenterManager, truy cập /classes/list/ với center_id không phải của mình.
+# Kết quả mong muốn: API trả về 200 hoặc 403 tùy config.
 from django.test import TestCase, Client
 
 class TestUT_RBAC_06(TestCase):

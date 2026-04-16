@@ -1,3 +1,8 @@
+
+# Test case: UT_ATT_17
+# Mục đích: Kiểm tra giáo viên cập nhật điểm đánh giá vượt max (score = 15).
+# Logic: Gửi score = 15, kiểm tra không lưu assessment.
+# Kết quả mong muốn: API trả về 400, không lưu assessment.
 from django.test import TestCase, Client
 
 class TestUT_ATT_17(TestCase):
